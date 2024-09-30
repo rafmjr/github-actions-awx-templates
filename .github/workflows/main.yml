@@ -1,0 +1,17 @@
+name: Create QA Slot
+run-name: Create a QA environment for this version 🔬
+
+on: [push]
+
+jobs:
+  manage-qa-slots:
+    runs-on: ubuntu-latest
+    name: A job to manage QA slots
+    steps:
+      - uses: actions/checkout@v4
+      - id: foo
+        uses: ./.github/actions/manages-qa-slots
+        with:
+          command-name: "/qadeploy"
+          command-token: xjvx6fLLa87HRlsM6ZDSmGSg
+          command-args: ${{ github.head_ref }}
