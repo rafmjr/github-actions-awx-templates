@@ -7,7 +7,7 @@ on:
 
 jobs:
   update-qa-slot:
-    if: contains(github.event.pull_request.labels.*.name, 'QA Required') && !github.event.pull_request.draft
+    if: contains(github.event.pull_request.labels.*.name, 'enhancement') && !github.event.pull_request.draft
     runs-on: ubuntu-latest
     environment: staging
     steps:

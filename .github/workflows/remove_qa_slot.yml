@@ -7,7 +7,7 @@ on:
 
 jobs:
   remove-qa-slot:
-    if: contains(github.event.pull_request.labels.*.name, 'QA Required') && !github.event.pull_request.draft
+    if: contains(github.event.pull_request.labels.*.name, 'enhancement') && !github.event.pull_request.draft
     runs-on: standard-runners
     environment: staging
     steps:

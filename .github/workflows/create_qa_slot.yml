@@ -4,11 +4,10 @@ run-name: Create the QA environment for this version 🔬
 on:
   pull_request:
     types: [labeled]
-  workflow_dispatch:
 
 jobs:
   create-qa-slot:
-    if: contains(github.event.pull_request.labels.*.name, 'QA Required') && !github.event.pull_request.draft
+    if: contains(github.event.pull_request.labels.*.name, 'enhancement') && !github.event.pull_request.draft
     runs-on: ubuntu-latest
     environment: staging
     steps:
@@ -17,6 +16,22 @@ jobs:
       - name: Normalizes branch name
         id: normalize-branch-name
         run: echo "normalized-branch-name=$(echo ${{ github.head_ref }} | tr -d '-' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Get integration package name
+        id: read-integration-package
+        run: |
+          pr_description="${{ github.event.pull_request.body }}"
+          integration_package=$(echo "$pr_description" | sed -n '/### Integration Package/,$p' | grep - | sed 's/- //')
+          echo "integration-package=$integration_package" >> $GITHUB_OUTPUT
+
+      - name: Check if integration package is customer
+        id: check-is-customer
+        run: |
+          if [[ "${{ steps.read-integration-package.outputs.integration-package }}" == *"customer"* ]]; then
+            echo "is_customer=yes" >> $GITHUB_OUTPUT
+          else
+            echo "is_customer=no" >> $GITHUB_OUTPUT
+          fi
 
       - name: Launch AWX template to create QA environment
         uses: ./.github/actions/launch-awx-template
@@ -29,7 +44,7 @@ jobs:
               "extra_vars":{
                 "branch_name": "${{ steps.normalize-branch-name.outputs.normalized-branch-name }}",
                 "branch_name_unsanitized": "${{ github.head_ref }}",
-                "is_securitas": "no"
+                "is_customer": "${{ steps.check-is-customer.outputs.is_customer }}",
+                "integration_package_name": "${{ steps.read-integration-package.outputs.integration-package }}"
               }
             }'
-# TODO: support integration packages and securitas environments
