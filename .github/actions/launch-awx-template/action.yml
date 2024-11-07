@@ -1,0 +1,30 @@
+name: "Launch AWX Job Template 🚀"
+description: "Launches any AWX Job Template using their API"
+
+inputs:
+  domain:
+    description: 'AWX URL'
+    required: true
+  username:
+    description: 'AWX Username'
+    required: true
+  password:
+    description: 'AWX Password'
+    required: true
+  job-template-id:
+    description: 'AWX Job Template ID'
+    required: true
+  extra-vars:
+    description: 'Extra vars'
+
+runs:
+  using: composite
+  steps:
+    - name: Launch AWX template
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: 'https://${{inputs.domain}}/api/v2/job_templates/${{inputs.job-template-id}}/launch/'
+        method: 'POST'
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
+        data: ${{ inputs.extra-vars }}
