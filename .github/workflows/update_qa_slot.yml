@@ -8,20 +8,33 @@ on:
 jobs:
   update-qa-slot:
     if: contains(github.event.pull_request.labels.*.name, 'enhancement') && !github.event.pull_request.draft
+    name: Update QA Slot
     runs-on: ubuntu-latest
     environment: staging
     steps:
       - uses: actions/checkout@v4
 
-      - name: Normalizes branch name
-        id: normalize-branch-name
-        run: echo "normalized-branch-name=$(echo ${{ github.head_ref }} | tr -d '-' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+      - id: normalize-branch-name
+        uses: ./.github/actions/normalize-branch-name
+        with:
+          branch_name: ${{ github.head_ref }}
+
+      - id: read-integration-package
+        uses: ./.github/actions/read-integration-package
+        with:
+          text: ${{ github.event.pull_request.body }}
 
       - name: Launch AWX template to update QA environment
         uses: ./.github/actions/launch-awx-template
         with:
           job-template-id: 2
           domain: ${{ secrets.AWX_DOMAIN }}
-          username: ${{ secrets.AWX_USER_NONPRD }}
-          password: ${{ secrets.AWX_PASSWORD_NONPRD }}
-          extra-vars: '{"extra_vars":{"branch_name": "${{ steps.normalize-branch-name.outputs.normalized-branch-name }}", "branch_name_unsanitized": "${{ github.head_ref }}"}}'
+          username: ${{ secrets.AWX_USER }}
+          password: ${{ secrets.AWX_PASSWORD }}
+          extra-vars: '{
+            "extra_vars":{
+            "branch_name": "${{ steps.normalize-branch-name.outputs.normalized-branch-name }}",
+            "branch_name_unsanitized": "${{ github.head_ref }}",
+            "integration_package_name": "${{ steps.read-integration-package.outputs.integration-package }}"
+            }
+            }'
