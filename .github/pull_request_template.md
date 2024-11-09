@@ -18,8 +18,8 @@ https://organization.atlassian.net/browse/TICKET_KEY
 
 Please let deployment know if any config changes are required and on where they need to be done (ex. main config or customer specific config)
 
-### Integration Package
+### Package
 
-Activate the following integration package and see README.md in the respective folder if necessary:
+Activate the following package and see README.md in the respective folder if necessary:
 
-- integration_package_name
+- package_name
