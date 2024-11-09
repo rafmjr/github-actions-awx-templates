@@ -1,0 +1,20 @@
+name: "Extract Package Name"
+
+inputs:
+  text:
+    required: true
+
+outputs:
+  package:
+    description: "The package name extracted from the PR description"
+    value: ${{ steps.extract-package.outputs.package }}
+
+runs:
+  using: composite
+  steps:
+    - id: extract-package
+      shell: bash
+      run: |
+        pr_description="${{ inputs.text }}"
+        package=$(echo "$pr_description" | sed -n '/### Package/,$p' | grep - | sed 's/- //' || echo "")
+        echo "package=$package" >> $GITHUB_OUTPUT

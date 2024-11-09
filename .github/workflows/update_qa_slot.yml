@@ -19,8 +19,8 @@ jobs:
         with:
           branch_name: ${{ github.head_ref }}
 
-      - id: read-integration-package
-        uses: ./.github/actions/read-integration-package
+      - id: read-package
+        uses: ./.github/actions/read-package
         with:
           text: ${{ github.event.pull_request.body }}
 
@@ -35,6 +35,6 @@ jobs:
             "extra_vars":{
             "branch_name": "${{ steps.normalize-branch-name.outputs.normalized-branch-name }}",
             "branch_name_unsanitized": "${{ github.head_ref }}",
-            "integration_package_name": "${{ steps.read-integration-package.outputs.integration-package }}"
+            "package_name": "${{ steps.read-package.outputs.package }}"
             }
             }'

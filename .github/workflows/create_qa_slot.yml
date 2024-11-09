@@ -19,15 +19,15 @@ jobs:
         with:
           branch_name: ${{ github.head_ref }}
 
-      - id: read-integration-package
-        uses: ./.github/actions/read-integration-package
+      - id: read-package
+        uses: ./.github/actions/read-package
         with:
           text: ${{ github.event.pull_request.body }}
 
-      - name: Check if integration package is customer
+      - name: Check if package is customer
         id: check-is-customer
         run: |
-          if [[ "${{ steps.read-integration-package.outputs.integration-package }}" == *"customer"* ]]; then
+          if [[ "${{ steps.read-package.outputs.package }}" == *"customer"* ]]; then
             echo "is_customer=yes" >> $GITHUB_OUTPUT
           else
             echo "is_customer=no" >> $GITHUB_OUTPUT
@@ -44,7 +44,7 @@ jobs:
             "extra_vars":{
             "branch_name": "${{ steps.normalize-branch-name.outputs.normalized-branch-name }}",
             "branch_name_unsanitized": "${{ github.head_ref }}",
-            "integration_package_name": "${{ steps.read-integration-package.outputs.integration-package }}",
+            "package_name": "${{ steps.read-package.outputs.package }}",
             "is_customer": "${{ steps.check-is-customer.outputs.is_customer }}"
             }
             }'
