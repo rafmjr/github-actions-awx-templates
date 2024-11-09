@@ -1,0 +1,20 @@
+name: "Extract Integration Package"
+
+inputs:
+  text:
+    required: true
+
+outputs:
+  integration-package:
+    description: "The integration package"
+    value: ${{ steps.extract-integration-package.outputs.integration-package }}
+
+runs:
+  using: composite
+  steps:
+    - id: extract-integration-package
+      shell: bash
+      run: |
+        pr_description="${{ inputs.text }}"
+        integration_package=$(echo "$pr_description" | sed -n '/### Integration Package/,$p' | grep - | sed 's/- //' || echo "")
+        echo "integration-package=$integration_package" >> $GITHUB_OUTPUT

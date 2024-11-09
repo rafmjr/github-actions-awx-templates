@@ -1,0 +1,17 @@
+name: "Normalizes branch name"
+
+inputs:
+  branch_name:
+    required: true
+
+outputs:
+  normalized-branch-name:
+    description: "The normalized branch name"
+    value: ${{ steps.normalize.outputs.normalized }}
+
+runs:
+  using: composite
+  steps:
+    - id: normalize
+      shell: bash
+      run: echo "normalized=$(echo "${{ inputs.branch_name }}" | tr -d '-' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
