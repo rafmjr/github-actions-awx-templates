@@ -25,7 +25,7 @@ runs:
       with:
         url: 'https://${{inputs.domain}}/api/v2/job_templates/${{inputs.job-template-id}}/launch/'
         method: 'POST'
-        customHeaders: '{"Content-Type": "application/json"}'
+        escapeData: true
         username: ${{ inputs.username }}
         password: ${{ inputs.password }}
         data: ${{ inputs.extra-vars }}
