@@ -1,0 +1,34 @@
+## Jira ticket URL
+https://tracktik.atlassian.net/browse/some_feature
+
+## Changelogs
+
+- Change 1
+- Change 2
+    - Sub-change 2.1
+    - Sub-change 2.2
+
+> Please make sure to add the proper labels if applicable:
+> - `High Risk` for risky PRs that might need a hotfix or a revert
+> - `No Prod Change` if the PR doesn't change production code (ex: tests, CI, doc)
+
+## Deployment Instructions
+
+### DB Migration
+
+Please specify the migration's path(s).
+
+_Example:_
+
+- database/migrations/(common|ttc)/20181106160527-file-does-not-exist.sql
+- protected/integrations/customer_staffr_com/database/migrations/(common|ttc)/20181106160527-file-does-not-exist.sql
+
+### Configuration changes
+
+Please let deployment know if any config changes are required and on where they need to be done (ex. Main config or client specific config)
+
+### Package
+
+Activate package `package_name` (details in integration README)  
+- package_name
+

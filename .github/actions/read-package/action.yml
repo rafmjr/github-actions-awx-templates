@@ -14,7 +14,8 @@ runs:
   steps:
     - id: extract-package
       shell: bash
+      env:
+        TEXT: ${{ inputs.text }}
       run: |
-        pr_description="${{ inputs.text }}"
-        package=$(echo "$pr_description" | sed -n '/### Package/,$p' | grep - | sed 's/- //' || echo "")
+        package=$(echo "$TEXT" | sed -n '/### Package/,$p' | grep - | sed 's/- //' | tr -d '\n\r' | sed 's/ //g' || echo "")
         echo "package=$package" >> $GITHUB_OUTPUT
